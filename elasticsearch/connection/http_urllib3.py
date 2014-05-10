@@ -29,7 +29,7 @@ class Urllib3HttpConnection(Connection):
 
         self.pool = pool_class(host, port=port, timeout=self.timeout, maxsize=maxsize)
 
-    def perform_request(self, method, url, params=None, body=None, timeout=None, ignore=()):
+    def perform_request(self, method, url, params=None, body=None, timeout=30, ignore=()):
         url = self.url_prefix + url
         if params:
             url = '%s?%s' % (url, urlencode(params or {}))
