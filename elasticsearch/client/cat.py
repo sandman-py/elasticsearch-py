@@ -13,12 +13,12 @@ class CatClient(NamespacedClient):
             master node (default: false)
         :arg master_timeout: Explicit operation timeout for connection to master
             node
-        :arg v: Verbose mode. Display column headers, default False    
+        :arg v: Verbose mode. Display column headers, default False
         """
         _, data = self.transport.perform_request('GET', _make_path('_cat',
             'aliases', name), params=params)
         return data
-    
+
     @query_params('bytes', 'h', 'help', 'local', 'master_timeout', 'v')
     def allocation(self, node_id=None, params=None):
         """
@@ -35,12 +35,12 @@ class CatClient(NamespacedClient):
             master node (default: false)
         :arg master_timeout: Explicit operation timeout for connection to master
             node
-        :arg v: Verbose mode. Display column headers, default False    
+        :arg v: Verbose mode. Display column headers, default False
         """
         _, data = self.transport.perform_request('GET', _make_path('_cat',
             'allocation', node_id), params=params)
         return data
-    
+
     @query_params('h', 'help', 'local', 'master_timeout', 'v')
     def count(self, index=None, params=None):
         """
@@ -56,12 +56,12 @@ class CatClient(NamespacedClient):
             master node (default: false)
         :arg master_timeout: Explicit operation timeout for connection to master
             node
-        :arg v: Verbose mode. Display column headers, default False    
+        :arg v: Verbose mode. Display column headers, default False
         """
         _, data = self.transport.perform_request('GET', _make_path('_cat',
             'count', index), params=params)
         return data
-    
+
     @query_params('h', 'help', 'local', 'master_timeout', 'ts', 'v')
     def health(self, params=None):
         """
@@ -76,23 +76,23 @@ class CatClient(NamespacedClient):
         :arg master_timeout: Explicit operation timeout for connection to master
             node
         :arg ts: Set to false to disable timestamping, default True
-        :arg v: Verbose mode. Display column headers, default False    
+        :arg v: Verbose mode. Display column headers, default False
         """
         _, data = self.transport.perform_request('GET', '/_cat/health',
             params=params)
         return data
-    
+
     @query_params('help')
     def help(self, params=None):
         """
         A simple help for the cat api.
         `<http://www.elasticsearch.org/guide/en/elasticsearch/reference/master/cat.html>`_
 
-        :arg help: Return help information, default False    
+        :arg help: Return help information, default False
         """
         _, data = self.transport.perform_request('GET', '/_cat', params=params)
         return data
-    
+
     @query_params('bytes', 'h', 'help', 'local', 'master_timeout', 'pri', 'v')
     def indices(self, index=None, params=None):
         """
@@ -110,12 +110,12 @@ class CatClient(NamespacedClient):
             node
         :arg pri: Set to true to return stats only for primary shards, default
             False
-        :arg v: Verbose mode. Display column headers, default False    
+        :arg v: Verbose mode. Display column headers, default False
         """
         _, data = self.transport.perform_request('GET', _make_path('_cat',
             'indices', index), params=params)
         return data
-    
+
     @query_params('h', 'help', 'local', 'master_timeout', 'v')
     def master(self, params=None):
         """
@@ -128,12 +128,12 @@ class CatClient(NamespacedClient):
             master node (default: false)
         :arg master_timeout: Explicit operation timeout for connection to master
             node
-        :arg v: Verbose mode. Display column headers, default False    
+        :arg v: Verbose mode. Display column headers, default False
         """
         _, data = self.transport.perform_request('GET', '/_cat/master',
             params=params)
         return data
-    
+
     @query_params('h', 'help', 'local', 'master_timeout', 'v')
     def nodes(self, params=None):
         """
@@ -146,12 +146,12 @@ class CatClient(NamespacedClient):
             master node (default: false)
         :arg master_timeout: Explicit operation timeout for connection to master
             node
-        :arg v: Verbose mode. Display column headers, default False    
+        :arg v: Verbose mode. Display column headers, default False
         """
         _, data = self.transport.perform_request('GET', '/_cat/nodes',
             params=params)
         return data
-    
+
     @query_params('bytes', 'h', 'help', 'local', 'master_timeout', 'v')
     def recovery(self, index=None, params=None):
         """
@@ -167,12 +167,12 @@ class CatClient(NamespacedClient):
             master node (default: false)
         :arg master_timeout: Explicit operation timeout for connection to master
             node
-        :arg v: Verbose mode. Display column headers, default False    
+        :arg v: Verbose mode. Display column headers, default False
         """
         _, data = self.transport.perform_request('GET', _make_path('_cat',
             'recovery', index), params=params)
         return data
-    
+
     @query_params('h', 'help', 'local', 'master_timeout', 'v')
     def shards(self, index=None, params=None):
         """
@@ -187,12 +187,31 @@ class CatClient(NamespacedClient):
             master node (default: false)
         :arg master_timeout: Explicit operation timeout for connection to master
             node
-        :arg v: Verbose mode. Display column headers, default False    
+        :arg v: Verbose mode. Display column headers, default False
         """
         _, data = self.transport.perform_request('GET', _make_path('_cat',
             'shards', index), params=params)
         return data
-    
+
+    @query_params('h', 'help', 'local', 'master_timeout', 'v')
+    def segments(self, index=None, params=None):
+        """
+        The segments command is the detailed view of Lucene segments per index.
+
+        :arg index: A comma-separated list of index names to limit the returned
+            information
+        :arg h: Comma-separated list of column names to display
+        :arg help: Return help information, default False
+        :arg local: Return local information, do not retrieve the state from
+            master node (default: false)
+        :arg master_timeout: Explicit operation timeout for connection to master
+            node
+        :arg v: Verbose mode. Display column headers, default False
+        """
+        _, data = self.transport.perform_request('GET', _make_path('_cat',
+            'segments', index), params=params)
+        return data
+
     @query_params('h', 'help', 'local', 'master_timeout', 'v')
     def pending_tasks(self, params=None):
         """
@@ -207,12 +226,12 @@ class CatClient(NamespacedClient):
             master node (default: false)
         :arg master_timeout: Explicit operation timeout for connection to master
             node
-        :arg v: Verbose mode. Display column headers, default False    
+        :arg v: Verbose mode. Display column headers, default False
         """
         _, data = self.transport.perform_request('GET', '/_cat/pending_tasks',
             params=params)
         return data
-    
+
     @query_params('full_id', 'h', 'help', 'local', 'master_timeout', 'v')
     def thread_pool(self, params=None):
         """
@@ -231,4 +250,29 @@ class CatClient(NamespacedClient):
         """
         _, data = self.transport.perform_request('GET', '/_cat/thread_pool',
             params=params)
+        return data
+
+    @query_params('bytes', 'fields', 'h', 'help', 'local', 'master_timeout',
+        'v')
+    def fielddata(self, fields=None, params=None):
+        """
+        Shows information about currently loaded fielddata on a per-node basis.
+        `<http://www.elasticsearch.org/guide/en/elasticsearch/reference/master/cat-fielddata.html>`_
+
+        :arg fields: A comma-separated list of fields to return the fielddata
+            size
+        :arg bytes: The unit in which to display byte values
+        :arg fields: A comma-separated list of fields to return the fielddata
+            size
+        :arg h: Comma-separated list of column names to display
+        :arg help: Return help information (default: 'false')
+        :arg local: Return local information, do not retrieve the state from
+            master node (default: false)
+        :arg master_timeout: Explicit operation timeout for connection to master
+            node
+        :arg v: Verbose mode. Display column headers (default: 'false')
+
+        """
+        _, data = self.transport.perform_request('GET', _make_path('_cat',
+            'fielddata', fields), params=params)
         return data

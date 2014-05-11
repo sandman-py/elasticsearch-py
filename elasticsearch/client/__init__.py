@@ -436,7 +436,36 @@ class Elasticsearch(object):
             params=params, body=body)
         return data
 
-    @query_params()
+    @query_params('allow_no_indices', 'expand_wildcards', 'ignore_unavailable',
+        'local', 'preference', 'routing')
+    def search_shards(self, index=None, doc_type=None, params=None):
+        """
+        The search shards api returns the indices and shards that a search
+        request would be executed against. This can give useful feedback for working
+        out issues or planning optimizations with routing and shard preferences.
+        `<http://www.elasticsearch.org/guide/en/elasticsearch/reference/master/search-shards.html>`_
+
+        :arg index: The name of the index
+        :arg doc_type: The type of the document
+        :arg allow_no_indices: Whether to ignore if a wildcard indices
+            expression resolves into no concrete indices. (This includes `_all`
+            string or when no indices have been specified)
+        :arg expand_wildcards: Whether to expand wildcard expression to concrete
+            indices that are open, closed or both. (default: '"open"')
+        :arg ignore_unavailable: Whether specified concrete indices should be
+            ignored when unavailable (missing or closed)
+        :arg local: Return local information, do not retrieve the state from
+            master node (default: false)
+        :arg preference: Specify the node or shard the operation should be
+            performed on (default: random)
+        :arg routing: Specific routing value
+        """
+        _, data = self.transport.perform_request('GET', _make_path(index,
+            doc_type, '_search_shards'), params=params)
+        return data
+
+    @query_params('allow_no_indices', 'expand_wildcards', 'ignore_unavailable',
+        'preference', 'routing', 'scroll', 'search_type')
     def search_template(self, index=None, doc_type=None, body=None, params=None):
         """
         A query that accepts a query template and a map of key/value pairs to
@@ -448,6 +477,19 @@ class Elasticsearch(object):
         :arg doc_type: A comma-separated list of document types to search; leave
             empty to perform the operation on all types
         :arg body: The search definition template and its params
+        :arg allow_no_indices: Whether to ignore if a wildcard indices
+            expression resolves into no concrete indices. (This includes `_all`
+            string or when no indices have been specified)
+        :arg expand_wildcards: Whether to expand wildcard expression to concrete
+            indices that are open, closed or both., default 'open'
+        :arg ignore_unavailable: Whether specified concrete indices should be
+            ignored when unavailable (missing or closed)
+        :arg preference: Specify the node or shard the operation should be
+            performed on (default: random)
+        :arg routing: A comma-separated list of specific routing values
+        :arg scroll: Specify how long a consistent view of the index should be
+            maintained for scrolled search
+        :arg search_type: Search operation type
         """
         _, data = self.transport.perform_request('GET', _make_path(index,
             doc_type, '_search', 'template'), params=params, body=body)
@@ -511,16 +553,18 @@ class Elasticsearch(object):
         return data
 
     @query_params()
-    def clear_scroll(self, scroll_id, params=None):
+    def clear_scroll(self, scroll_id=None, body=None, params=None):
         """
         Clear the scroll request created by specifying the scroll parameter to
         search.
         `<http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-scroll.html>`_
 
         :arg scroll_id: The scroll ID or a list of scroll IDs
+        :arg body: A comma-separated list of scroll IDs to clear if none was
+            specified via the scroll_id parameter
         """
         _, data = self.transport.perform_request('DELETE', _make_path('_search', 'scroll', scroll_id),
-            params=params)
+            body=body, params=params)
         return data
 
 
@@ -896,5 +940,52 @@ class Elasticsearch(object):
         """
         _, data = self.transport.perform_request('GET', _make_path(index,
             doc_type, '_mtermvectors'), params=params, body=body)
+        return data
+
+    @query_params('verbose')
+    def benchmark(self, index=None, doc_type=None, body=None, params=None):
+        """
+        The benchmark API provides a standard mechanism for submitting queries
+        and measuring their performance relative to one another.
+        `<http://www.elasticsearch.org/guide/en/elasticsearch/reference/master/search-benchmark.html>`_
+
+        :arg index: A comma-separated list of index names; use `_all` or empty
+            string to perform the operation on all indices
+        :arg doc_type: The name of the document type
+        :arg body: The search definition using the Query DSL
+        :arg verbose: Specify whether to return verbose statistics about each
+            iteration (default: false)
+    
+        """
+        _, data = self.transport.perform_request('PUT', _make_path(index,
+            doc_type, '_bench'), params=params, body=body)
+        return data
+
+    @query_params()
+    def abort_benchmark(self, name=None, params=None):
+        """
+        Aborts a running benchmark.
+        `<http://www.elasticsearch.org/guide/en/elasticsearch/reference/master/search-benchmark.html>`_
+
+        :arg name: A benchmark name
+    
+        """
+        _, data = self.transport.perform_request('POST', _make_path('_bench',
+            'abort', name), params=params)
+        return data
+
+    @query_params()
+    def list_benchmarks(self, index=None, doc_type=None, params=None):
+        """
+        View the progress of long-running benchmarks.
+        `<http://www.elasticsearch.org/guide/en/elasticsearch/reference/master/search-benchmark.html>`_
+
+        :arg index: A comma-separated list of index names; use `_all` or empty
+            string to perform the operation on all indices
+        :arg doc_type: The name of the document type
+    
+        """
+        _, data = self.transport.perform_request('GET', _make_path(index,
+            doc_type, '_bench'), params=params)
         return data
 

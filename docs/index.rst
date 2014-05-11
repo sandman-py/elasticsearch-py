@@ -5,20 +5,35 @@ Official low-level client for Elasticsearch. It's goal is to provide common
 ground for all Elasticsearch-related code in Python; because of this it tries
 to be opinion-free and very extendable.
 
+Compatibility
+-------------
+
+The library is compatible with both Elasticsearch 1.x and 0.90.x but you
+**have to use a matching version**.
+
+For **Elasticsearch 1.0** and later, use the major version 1 (``1.x.y``) of the
+library.
+
+For **Elasticsearch 0.90.x**, use a version from ``0.4.x`` releases of the
+library.
+
+The recommended way to set your requirements in your `setup.py` or
+`requirements.txt` is::
+
+    # Elasticsearch 1.0
+    elasticsearch>=1.0.0,<2.0.0
+
+    # Elasticsearch 0.90
+    elasticsearch<1.0.0
+
+The development is happening on ``master`` and ``0.4`` branches, respectively.
 
 Example Usage
 -------------
 
-
-.. testsetup::
+::
 
     from datetime import datetime
-    from elasticsearch import Elasticsearch
-    es = Elasticsearch()
-    es.delete_index("test_index", ignore_missing=True)
-
-.. testcode::
-
     from elasticsearch import Elasticsearch
     es = Elasticsearch()
 
@@ -28,7 +43,7 @@ Example Usage
         'timestamp': datetime(2010, 10, 10, 10, 10, 10)
     }
     res = es.index(index="test-index", doc_type='tweet', id=1, body=doc)
-    print(res['ok'])
+    print(res['created'])
 
     res = es.get(index="test-index", doc_type='tweet', id=1)
     print(res['_source'])
@@ -39,14 +54,6 @@ Example Usage
     print("Got %d Hits:" % res['hits']['total'])
     for hit in res['hits']['hits']:
         print("%(timestamp)s %(author)s: %(text)s" % hit["_source"])
-
-.. testoutput::
-    :hide:
-
-    True
-    {u'text': u'Elasticsearch: cool. bonsai cool.', u'author': u'kimchy', u'timestamp': u'2010-10-10T10:10:10'}
-    Got 1 Hits:
-    2010-10-10T10:10:10 kimchy: Elasticsearch: cool. bonsai cool.
 
 Features
 --------
